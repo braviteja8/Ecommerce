@@ -18,10 +18,9 @@ public class ProductController {
         this.productService=productService;
     }
 
-     @GetMapping("/products/{id}/{token}")
-    public Product getSingleProduct(@PathVariable("id")Long id,@PathVariable("token")String token) throws InvalidIdException {
-
-        return this.productService.getSingleProduct(id,token);
+     @GetMapping("/products/{id}")
+    public Product getSingleProduct(@PathVariable("id")Long id) throws InvalidIdException {
+        return this.productService.getSingleProduct(id);
     }
     @GetMapping("/products")
     public List<Product> getAllProducts(){

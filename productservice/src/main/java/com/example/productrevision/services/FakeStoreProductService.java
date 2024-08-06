@@ -36,16 +36,11 @@ public class FakeStoreProductService implements ProductServiceInterface{
         return product;
     }
 
-//    @Override
-//    public Product getSingleProduct(Long id) {
-//        ProductResponseDto responseDto=restTemplate.getForObject("https://fakestoreapi.com/products/"+id,ProductResponseDto.class);
-//        Product product=getProduct(responseDto);
-//        return product;
-//    }
-
     @Override
-    public Product getSingleProduct(Long id, String token) throws InvalidIdException {
-        return null;
+    public Product getSingleProduct(Long id) {
+        ProductResponseDto responseDto=restTemplate.getForObject("https://fakestoreapi.com/products/"+id,ProductResponseDto.class);
+        Product product=getProduct(responseDto);
+        return product;
     }
 
     @Override

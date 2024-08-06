@@ -28,15 +28,12 @@ public class SelfProductService implements ProductServiceInterface{
         this.productRepository=productRepository;
         this.redisTemplate=redisTemplate;
     }
-    public Product getSingleProduct(Long id,String token) throws InvalidIdException {
+    public Product getSingleProduct(Long id) throws InvalidIdException {
 
 //        if (redisTemplate.opsForHash().hasKey("PRODUCTS",id)) {
 //            return (Product) redisTemplate.opsForHash().get("PRODUCTS",id);
 //        }
-        boolean object = restTemplate.getForObject("https://authrevision/users/{token}",boolean.class);
-        if(object==false){
-            throw new InvalidIdException();
-        }
+
         Optional<Product>productOptional=productRepository.findById(id);
         if (productOptional.isEmpty()) {
             throw new InvalidIdException();
@@ -44,7 +41,6 @@ public class SelfProductService implements ProductServiceInterface{
         Product product=productOptional.get();
 //        redisTemplate.opsForHash().put("PRODUCTS",id,product);
 //        redisTemplate.expire("PRODUCTS",1, TimeUnit.MINUTES);
-        System.out.println("got request");
         return product;
     }
 

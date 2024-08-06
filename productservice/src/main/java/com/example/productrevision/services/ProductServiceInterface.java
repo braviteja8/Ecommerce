@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public interface ProductServiceInterface {
-    Product getSingleProduct(Long id,String token) throws InvalidIdException;
+    Product getSingleProduct(Long id) throws InvalidIdException;
     List<Product> getAllProducts();
     Product updateProduct(Long id, ProductRequestDto productRequestDto);
     Product addProduct(ProductRequestDto productRequestDto);
