@@ -2,7 +2,9 @@ package com.example.productrevision.services;
 
 import com.example.productrevision.dtos.ProductRequestDto;
 import com.example.productrevision.exceptions.InvalidIdException;
+import com.example.productrevision.models.Category;
 import com.example.productrevision.models.Product;
+import com.example.productrevision.repositories.CategoryRepo;
 import com.example.productrevision.repositories.ProductRepository;
 import com.netflix.discovery.converters.Auto;
 import lombok.Setter;
@@ -21,11 +23,13 @@ import java.util.concurrent.TimeUnit;
 public class SelfProductService implements ProductServiceInterface{
 
     private ProductRepository productRepository;
+    private CategoryRepo categoryRepo;
     @Autowired
     private RestTemplate restTemplate;
     private RedisTemplate<String,String>redisTemplate;
-    public SelfProductService(ProductRepository productRepository,RedisTemplate redisTemplate){
+    public SelfProductService(ProductRepository productRepository,CategoryRepo categoryRepo,RedisTemplate redisTemplate){
         this.productRepository=productRepository;
+        this.categoryRepo=categoryRepo;
         this.redisTemplate=redisTemplate;
     }
     public Product getSingleProduct(Long id) throws InvalidIdException {
@@ -52,12 +56,55 @@ public class SelfProductService implements ProductServiceInterface{
     }
 
     @Override
-    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
-        return null;
+    public Product updateProduct(Long id, Product product) {
+        Optional<Product> productOptional=productRepository.findById(id);
+        Product existingProduct=productOptional.get();
+//        existingProduct.setName(
+//                product.getName()!=null ?
+//                        product.getName() :
+//                        existingProduct.getName()
+//        );
+        existingProduct.setImage(
+                product.getImage()!=null ?
+                        product.getImage() :
+                        existingProduct.getImage()
+        );
+        existingProduct.setPrice(
+                product.getPrice()>0 ?
+                        product.getPrice() :
+                        existingProduct.getPrice()
+        );
+        existingProduct.setDescription(
+                product.getDescription()!=null ?
+                        product.getDescription():
+                        existingProduct.getDescription()
+        );
+        Optional<Category> categoryToCheck=categoryRepo.findByName(product.getCategory().getName());
+        if(categoryToCheck.isEmpty()){
+            Category category=new Category();
+            category.setName(product.getCategory().getName());
+            Category savedCategory=categoryRepo.save(category);
+            existingProduct.setCategory(savedCategory);
+        }
+        else{
+            existingProduct.setCategory(categoryToCheck.get());
+        }
+        return productRepository.save(existingProduct);
     }
 
     @Override
-    public Product addProduct(ProductRequestDto productRequestDto) {
-        return null;
+    public Product addProduct(Product product) {
+        Optional<Category> categoryToCheck=categoryRepo.findByName(product.getCategory().getName());
+        if(categoryToCheck.isEmpty()){
+            Category category=new Category();
+            category.setName(product.getCategory().getName());
+            Category savedCategory=categoryRepo.save(category);
+            product.setCategory(savedCategory);
+        }
+        else{
+            product.setCategory(categoryToCheck.get());
+        }
+
+        return productRepository.save(product);
     }
 }

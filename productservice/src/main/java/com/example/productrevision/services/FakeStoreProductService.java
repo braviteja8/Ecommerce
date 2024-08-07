@@ -54,22 +54,27 @@ public class FakeStoreProductService implements ProductServiceInterface{
     }
 
     @Override
-    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
-
-        RequestCallback requestCallback=restTemplate.httpEntityCallback(productRequestDto,ProductResponseDto.class);
-        HttpMessageConverterExtractor<ProductResponseDto> responseExtractor =
-                new HttpMessageConverterExtractor<>(ProductResponseDto.class,restTemplate.getMessageConverters());
-        ProductResponseDto responseDto=restTemplate.execute("https://fakestoreapi.com/products/7", HttpMethod.PUT,
-                requestCallback, responseExtractor);
-
-//        RequestCallback requestCallback = httpEntityCallback(request);
-//        execute(url, HttpMethod.PUT, requestCallback, null, uriVariables);
-
-        return getProduct(responseDto);
+    public Product updateProduct(Long id, Product product) {
+        return null;
     }
 
+ //   @Override
+//    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
+//
+//        RequestCallback requestCallback=restTemplate.httpEntityCallback(productRequestDto,ProductResponseDto.class);
+//        HttpMessageConverterExtractor<ProductResponseDto> responseExtractor =
+//                new HttpMessageConverterExtractor<>(ProductResponseDto.class,restTemplate.getMessageConverters());
+//        ProductResponseDto responseDto=restTemplate.execute("https://fakestoreapi.com/products/7", HttpMethod.PUT,
+//                requestCallback, responseExtractor);
+//
+////        RequestCallback requestCallback = httpEntityCallback(request);
+////        execute(url, HttpMethod.PUT, requestCallback, null, uriVariables);
+//
+//        return getProduct(responseDto);
+//    }
+
     @Override
-    public Product addProduct(ProductRequestDto productRequestDto) {
+    public Product addProduct(Product product) {
         return null;
     }
 }

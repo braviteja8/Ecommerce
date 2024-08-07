@@ -1,6 +1,8 @@
 package com.example.productrevision.controllers;
 
+import com.example.productrevision.dtos.ProductRequestDto;
 import com.example.productrevision.exceptions.InvalidIdException;
+import com.example.productrevision.models.Category;
 import com.example.productrevision.models.Product;
 
 import com.example.productrevision.services.ProductServiceInterface;
@@ -27,14 +29,28 @@ public class ProductController {
         return this.productService.getAllProducts();
     }
     @PostMapping("/products/{id}")
-    public Product updateProduct(@PathVariable("id")Long id,@RequestBody Product product){
-
-//         return this.productService.updateProduct(id,product);
-        return new Product();
+    public Product updateProduct(@PathVariable("id")Long id,@RequestBody ProductRequestDto requestDto){
+        Product product=new Product();
+        product.setId(id);
+        product.setName(requestDto.getTitle());
+        product.setImage(requestDto.getImage());
+        product.setDescription(requestDto.getDescription());
+        product.setPrice(requestDto.getPrice());
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDto.getCategory());
+        return this.productService.updateProduct(id,product);
     }
     @PostMapping("/products")
-    public Product addProduct(@RequestBody Product product){
-         return new Product();
+    public Product addProduct(@RequestBody ProductRequestDto requestDto){
+
+        Product product=new Product();
+        product.setName(requestDto.getTitle());
+        product.setImage(requestDto.getImage());
+        product.setDescription(requestDto.getDescription());
+        product.setPrice(requestDto.getPrice());
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDto.getCategory());
+        return this.productService.addProduct(product);
     }
 
 }
